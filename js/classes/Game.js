@@ -1,10 +1,12 @@
 class Game {
   constructor() {
+    // representation of board
     this.board = [
       ['', '', ''],
       ['', '', ''],
       ['', '', ''],
     ];
+    // all possible win combinations
     this.winningSequences = [
       // horizonal
       [
@@ -50,22 +52,33 @@ class Game {
         { row: 2, column: 2 },
       ],
     ];
-    this.circle = 'far fa-circle';
-    this.times = 'fas fa-times';
+    this.circle = 'far fa-circle'; // font awesome icon code for O
+    this.times = 'fas fa-times'; // font awesome icon code for X
     this.isPlayerTurn = true;
+    this.ai = new Ai();
+    // initialize the game
+    this.initializeBoard();
   }
 
+  /**
+   * Adds event listeners to all cells on board
+   * determines if an X or O should be placed on the selected
+   * cell based on isPlayerTurn
+   * displays game over message if last move was a winning move
+   */
   initializeBoard() {
     const cells = document.querySelectorAll('.cell');
 
     cells.forEach((cell) => {
       cell.addEventListener('click', (e) => {
         const cell = e.target;
-        console.log(cell.dataset.cell);
-        cell.innerHTML = `<i class="${
-          this.isPlayerTurn ? this.times : this.circle
-        }"></i>`;
-        this.populateGameBoard(cell.dataset.cell, this.isPlayerTurn);
+        const playerMove = this.getCellRowAndColumn(cell.dataset.cell);
+        this.populateGameBoard(
+          playerMove.row,
+          playerMove.column,
+          this.isPlayerTurn,
+          cell,
+        );
         const gameOver = this.isWinningMove(
           this.board,
           this.winningSequences,
@@ -78,18 +91,39 @@ class Game {
           );
         }
 
-        this.isPlayerTurn = !this.isPlayerTurn;
+        if (!this.isPlayerTurn) {
+          const aiMove = this.ai.bestMove(this.board);
+          const aiCell = this.getHtmlCellFromRowAndColumn(
+            aiMove.row,
+            aiMove.column,
+          );
+          this.populateGameBoard(
+            aiMove.row,
+            aiMove.column,
+            this.isPlayerTurn,
+            aiCell,
+          );
+        }
       });
     });
   }
 
-  populateGameBoard(cellDataId, isPlayer) {
+  populateGameBoard(row, column, isPlayer, cell) {
     const xOrCircle = isPlayer ? 'x' : 'o';
-    const { row, column } = this.getCellRowAndColumn(cellDataId);
+    const iconClass = isPlayer ? this.times : this.circle;
     this.board[row][column] = xOrCircle;
-    console.log(this.board);
+    cell.innerHTML = `<i class="${iconClass}"></i>`;
+    this.isPlayerTurn = !this.isPlayerTurn;
   }
 
+  /**
+   * @description gets row/column to of cell based on
+   * data-cell attribute each cell has on html page
+   *
+   * @param {String} cellDataId
+   *
+   * @returns {Object}
+   */
   getCellRowAndColumn(cellDataId) {
     const cellId = Number(cellDataId);
     let row = undefined;
@@ -109,6 +143,24 @@ class Game {
     return { row, column };
   }
 
+  getHtmlCellFromRowAndColumn(row, column) {
+    const rowOffset = row * 3;
+    const dataCell = rowOffset + column;
+    const cell = document.querySelector(`[data-cell="${dataCell}"]`);
+    return cell;
+  }
+
+  /**
+   * @description determins if last move was a
+   * winning move based on the winningSequences
+   * array
+   *
+   * @param {Array} board
+   * @param {Array} winningSequences
+   * @param {Boolean} isPlayer
+   *
+   * @returns {Boolean}
+   */
   isWinningMove(board, winningSequences, isPlayer) {
     const player = isPlayer ? 'x' : 'o';
     let isWinningMove = false;
