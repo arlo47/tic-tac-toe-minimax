@@ -14,7 +14,7 @@ class Ai {
       for (let j = 0; j < 3; j++) {
         if (board[i][j] === '') {
           board[i][j] = 'o';
-          let score = this.minimax(board, 0, true);
+          let score = this.minimax(board, 0, false);
           board[i][j] = '';
           if (score > bestScore) {
             bestScore = score;
