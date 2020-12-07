@@ -1,0 +1,15 @@
+main {
+  margin: 60px auto;
+  width: 800px;
+}
+
+main .row {
+  height: 120px;
+}
+
+.cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 48px;
+}

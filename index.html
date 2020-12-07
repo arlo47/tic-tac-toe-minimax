@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tic Tac Toe</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <main>
+    <div id="game-board" class="container">
+      <div id="first-row" class="row">
+        <div data-cell="0" class="cell col-4"></div>
+        <div data-cell="1" class="cell col-4 border-left border-right"></div>
+        <div data-cell="2" class="cell col-4"></div>
+      </div>
+      <div id="second-row" class="row">
+        <div data-cell="3" class="cell col-4 border-top border-bottom"></div>
+        <div data-cell="4" class="cell col-4 border"></div>
+        <div data-cell="5" class="cell col-4 border-top border-bottom"></div>
+      </div>
+      <div id="third-row" class="row">
+        <div data-cell="6" class="cell col-4"></div>
+        <div data-cell="7" class="cell col-4 border-left border-right"></div>
+        <div data-cell="8" class="cell col-4"></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://kit.fontawesome.com/78d39df27c.js" crossorigin="anonymous"></script>
+  <script src="js/classes/Game.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
