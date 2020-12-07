@@ -86,9 +86,7 @@ class Game {
         );
 
         if (gameOver) {
-          return alert(
-            `Game over player has ${this.isPlayerTurn ? 'won' : lost}`,
-          );
+          return alert(`Game over: ${gameOver}!`);
         }
 
         if (!this.isPlayerTurn) {
@@ -161,19 +159,48 @@ class Game {
    *
    * @returns {Boolean}
    */
-  isWinningMove(board, winningSequences, isPlayer) {
-    const player = isPlayer ? 'x' : 'o';
+  isWinningMove(board, winningSequences) {
+    const player = 'x';
+    const ai = 'o';
+    let result = null;
     let isWinningMove = false;
+
     for (const sequence of winningSequences) {
       if (
         board[sequence[0].row][sequence[0].column] === player &&
         board[sequence[1].row][sequence[1].column] === player &&
         board[sequence[2].row][sequence[2].column] === player
       ) {
+        result = player;
         isWinningMove = true;
+        break;
+      } else if (
+        board[sequence[0].row][sequence[0].column] === ai &&
+        board[sequence[1].row][sequence[1].column] === ai &&
+        board[sequence[2].row][sequence[2].column] === ai
+      ) {
+        result = ai;
+        isWinningMove = true;
+      }
+    }
+
+    let emptyCellExists = false;
+    for (const row of board) {
+      for (const cell of row) {
+        if (cell === '') {
+          emptyCellExists = true;
+          break;
+        }
+      }
+      if (emptyCellExists) {
         break;
       }
     }
-    return isWinningMove;
+
+    if (!emptyCellExists) {
+      result = 'tie';
+    }
+
+    return result;
   }
 }
