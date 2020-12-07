@@ -6,14 +6,49 @@ class Game {
       ['', '', ''],
     ];
     this.winningSequences = [
-      [1, 2, 3],
-      [4, 5, 6],
-      [7, 8, 9],
-      [1, 4, 7],
-      [2, 5, 8],
-      [3, 6, 9],
-      [1, 5, 9],
-      [3, 5, 7],
+      // horizonal
+      [
+        { row: 0, column: 0 },
+        { row: 0, column: 1 },
+        { row: 0, column: 2 },
+      ],
+      [
+        { row: 1, column: 0 },
+        { row: 1, column: 1 },
+        { row: 1, column: 2 },
+      ],
+      [
+        { row: 2, column: 0 },
+        { row: 2, column: 1 },
+        { row: 2, column: 2 },
+      ],
+      // diagonal
+      [
+        { row: 0, column: 0 },
+        { row: 1, column: 1 },
+        { row: 2, column: 2 },
+      ],
+      [
+        { row: 0, column: 2 },
+        { row: 1, column: 1 },
+        { row: 2, column: 0 },
+      ],
+      // vertical
+      [
+        { row: 0, column: 0 },
+        { row: 1, column: 0 },
+        { row: 2, column: 0 },
+      ],
+      [
+        { row: 0, column: 1 },
+        { row: 1, column: 1 },
+        { row: 2, column: 1 },
+      ],
+      [
+        { row: 0, column: 2 },
+        { row: 1, column: 2 },
+        { row: 2, column: 2 },
+      ],
     ];
     this.circle = 'far fa-circle';
     this.times = 'fas fa-times';
@@ -31,6 +66,18 @@ class Game {
           this.isPlayerTurn ? this.times : this.circle
         }"></i>`;
         this.populateGameBoard(cell.dataset.cell, this.isPlayerTurn);
+        const gameOver = this.isWinningMove(
+          this.board,
+          this.winningSequences,
+          this.isPlayerTurn,
+        );
+
+        if (gameOver) {
+          return alert(
+            `Game over player has ${this.isPlayerTurn ? 'won' : lost}`,
+          );
+        }
+
         this.isPlayerTurn = !this.isPlayerTurn;
       });
     });
@@ -62,15 +109,19 @@ class Game {
     return { row, column };
   }
 
-  isWinningMove() {
-    let wasWinningMove = false;
-    for (let i = 0; i < winningSequences.length; i++) {
-      const sequence = winningSequences[i];
-      if (playerHasSequence(sequence, player)) {
-        wasWinningMove = true;
+  isWinningMove(board, winningSequences, isPlayer) {
+    const player = isPlayer ? 'x' : 'o';
+    let isWinningMove = false;
+    for (const sequence of winningSequences) {
+      if (
+        board[sequence[0].row][sequence[0].column] === player &&
+        board[sequence[1].row][sequence[1].column] === player &&
+        board[sequence[2].row][sequence[2].column] === player
+      ) {
+        isWinningMove = true;
         break;
       }
     }
-    return wasWinningMove;
+    return isWinningMove;
   }
 }
