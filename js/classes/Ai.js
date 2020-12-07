@@ -7,57 +7,58 @@ class Ai {
     };
   }
 
-  bestMove(actualBoard) {
-    const board = JSON.parse(JSON.stringify(actualBoard));
+  bestMove(board) {
     let bestScore = -Infinity;
-    let bestMove;
-
+    let move;
     for (let i = 0; i < 3; i++) {
       for (let j = 0; j < 3; j++) {
         if (board[i][j] === '') {
           board[i][j] = 'o';
           let score = this.minimax(board, 0, true);
+          board[i][j] = '';
           if (score > bestScore) {
             bestScore = score;
-            bestMove = { row: i, column: j };
+            move = { row: i, column: j };
           }
         }
       }
     }
-    return bestMove;
+    return move;
   }
 
   minimax(board, depth, isMaximizing) {
-    let bestScore = -Infinity;
-    let bestMove;
+    const gameOutcome = game.isWinningMove(board, game.winningSequences);
+
+    if (gameOutcome !== null) {
+      return this.minimaxScores[gameOutcome];
+    }
 
     if (isMaximizing) {
+      let bestScore = -Infinity;
       for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
           if (board[i][j] === '') {
             board[i][j] = 'o';
-            let score = this.minimax(board, depth + 1, true);
-            if (score > bestScore) {
-              bestScore = score;
-              bestMove = { row: i, column: j };
-            }
+            let score = this.minimax(board, depth + 1, false);
+            board[i][j] = '';
+            bestScore = Math.max(score, bestScore);
           }
         }
       }
+      return bestScore;
     } else {
+      let bestScore = Infinity;
       for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
           if (board[i][j] === '') {
             board[i][j] = 'x';
-            let score = this.minimax(board, depth + 1, false);
-            if (score < bestScore) {
-              bestScore = score;
-              bestMove = { row: i, column: j };
-            }
+            let score = this.minimax(board, depth + 1, true);
+            board[i][j] = '';
+            bestScore = Math.min(score, bestScore);
           }
         }
       }
+      return bestScore;
     }
-    return bestMove;
   }
 }

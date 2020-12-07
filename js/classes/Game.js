@@ -184,21 +184,23 @@ class Game {
       }
     }
 
-    let emptyCellExists = false;
-    for (const row of board) {
-      for (const cell of row) {
-        if (cell === '') {
-          emptyCellExists = true;
+    if (!isWinningMove) {
+      let emptyCellExists = false;
+      for (const row of board) {
+        for (const cell of row) {
+          if (cell === '') {
+            emptyCellExists = true;
+            break;
+          }
+        }
+        if (emptyCellExists) {
           break;
         }
       }
-      if (emptyCellExists) {
-        break;
-      }
-    }
 
-    if (!emptyCellExists) {
-      result = 'tie';
+      if (!emptyCellExists) {
+        result = 'tie';
+      }
     }
 
     return result;
