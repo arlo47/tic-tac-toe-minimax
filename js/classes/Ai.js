@@ -27,7 +27,12 @@ class Ai {
   }
 
   minimax(board, depth, isMaximizing) {
-    const gameOutcome = game.isWinningMove(board, game.winningSequences);
+    const currentLetter = isMaximizing ? 'o' : 'x';
+    const gameOutcome = game.checkWinner(
+      board,
+      game.winningSequences,
+      currentLetter,
+    );
 
     if (gameOutcome !== null) {
       return this.minimaxScores[gameOutcome];
